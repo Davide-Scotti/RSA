@@ -13,12 +13,12 @@ function saveKeys(privateKey, publicKey) {
 
 // Funzione per generare una coppia di chiavi RSA (privata e pubblica)
 async function generateRSAKeys() {
-    const { privateKey, publicKey } = await window.crypto.subtle.generateKey({
+    const { privateKey, publicKey } = await window.crypto.subtle.generateKeyPair({
         name: 'RSA-OAEP',
         modulusLength: 2048,
         publicExponent: new Uint8Array([1, 0, 1]),
         hash: 'SHA-256'
-    }, true, ['encrypt', 'decrypt']);
+    });
     
     const exportedPrivateKey = await window.crypto.subtle.exportKey('pkcs8', privateKey);
     const exportedPublicKey = await window.crypto.subtle.exportKey('spki', publicKey);

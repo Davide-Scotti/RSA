@@ -1,5 +1,5 @@
 const http = require('http');
-const fs = require ('fs');
+const fs = require('fs');
 const crypto = require('./RSA');
 
 const server = http.createServer((req, res) => {
