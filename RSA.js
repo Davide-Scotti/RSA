@@ -1,4 +1,19 @@
-const crypto = require('crypto');
+const readline = require('readline')
+const fs = require('fs')
+const crypto = require('crypto')
+
+// Funzione per caricare le chiavi da file
+function loadKeys() {
+    const privateKey = fs.readFileSync('private_key.pem', 'utf-8')
+    const publicKey = fs.readFileSync('public_key.pem', 'utf-8')
+    return {privateKey, publicKey}
+}
+
+// Funzione per salvare le chiavi su file
+function saveKeys(privateKey, publicKey){
+    fs.writeFileSync('private_key.pem', privateKey, 'utf-8')
+    fs.writeFileSync('public_key.pem', publicKey, 'utf-8')
+}
 
 // Funzione per generare una coppia di chiavi RSA (privata e pubblica)
 function generateRSAKeys() {
@@ -13,6 +28,7 @@ function generateRSAKeys() {
             format: 'pem'
         }
     });
+    saveKeys(privateKey, publicKey)
 }
 
 // Funzione per cifrare un messaggio utilizzando la chiave pubblica
@@ -29,14 +45,24 @@ function decryptRSA(encryptedMessage, privateKey) {
     return decrypted.toString('utf-8');
 }
 
-// Esempio di utilizzo
-const { publicKey, privateKey } = generateRSAKeys();
-const message = "Hello, this is a secret message!";
+// Funzione per inviare un messaggio cifrato
+function sendMessage(reciverPublicKey, message) {
+    const encryptedMessage = encryptRSA(message, reciverPublicKey)
+    console.log("Messaggio cifrato:", encryptedMessage)
+    // Simulo l'invio del messaggio cifrato all'altro utente
+}
 
-// Cifra il messaggio utilizzando la chiave pubblica
-const encryptedMessage = encryptRSA(message, publicKey);
-console.log("Messaggio cifrato:", encryptedMessage);
+// Funzione per ricevere e decifrare un messaggio
+function reciveMessage(encryptedMessage){
+    const { privateKey } = loadKeys()
+    const decryptedMessage = decryptRSA(encryptedMessage, privateKey)
+    console.log("Messaggio decifrato: ", decryptedMessage)
+}
 
-// Decifra il messaggio utilizzando la chiave privata
-const decryptedMessage = decryptRSA(encryptedMessage, privateKey);
-console.log("Messaggio decifrato:", decryptedMessage);
+// Interfaccia utente per inviare e ricevere messaggi
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+})
+
+console.log("Benvenuto")
