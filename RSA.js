@@ -1,17 +1,14 @@
-const fs = require('fs')
-const crypto = require('crypto')
-
-// Funzione per caricare le chiavi da file
+// Funzione per caricare le chiavi da localStorage
 function loadKeys() {
-    const privateKey = fs.readFileSync('private_key.pem', 'utf-8')
-    const publicKey = fs.readFileSync('public_key.pem', 'utf-8')
-    return { privateKey, publicKey }
+    const privateKey = localStorage.getItem('private_key');
+    const publicKey = localStorage.getItem('public_key');
+    return { privateKey, publicKey };
 }
 
-// Funzione per salvare le chiavi su file
+// Funzione per salvare le chiavi su localStorage
 function saveKeys(privateKey, publicKey) {
-    fs.writeFileSync('private_key.pem', privateKey, 'utf-8')
-    fs.writeFileSync('public_key.pem', publicKey, 'utf-8')
+    localStorage.setItem('private_key', privateKey);
+    localStorage.setItem('public_key', publicKey);
 }
 
 // Funzione per generare una coppia di chiavi RSA (privata e pubblica)
