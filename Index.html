@@ -32,38 +32,30 @@
 
     <script src="RSA.js"></script>
     <script>
-        // Funzione per inviare un messaggio
         async function sendMessage() {
             const receiverPublicKey = document.getElementById("receiverPublicKey").value;
             const message = document.getElementById("messageInput").value;
 
-            // Invia il messaggio cifrato utilizzando RSA
-            const encryptedMessage = await encryptRSA(message, receiverPublicKey);
+            const encryptedMessage = await RSA.encrypt(message, receiverPublicKey);
 
-            // Visualizza il messaggio cifrato nella message box del mittente
             const leftMessageBox = document.getElementById("leftMessageBox");
             leftMessageBox.innerHTML += `<div><strong>Me:</strong> ${message}</div>`;
             leftMessageBox.innerHTML += `<div>Cifrato: ${encryptedMessage}</div>`;
 
-            // Simula l'invio del messaggio cifrato all'altro utente
             await receiveMessage(encryptedMessage);
         }
 
-        // Funzione per ricevere e visualizzare un messaggio
         async function receiveMessage(encryptedMessage) {
-            // Riceve e decifra il messaggio utilizzando RSA
-            const { privateKey } = loadKeys();
-            const decryptedMessage = await decryptRSA(encryptedMessage, privateKey);
+            const { privateKey } = await RSA.loadKeys();
+            const decryptedMessage = await RSA.decrypt(encryptedMessage, privateKey);
 
-            // Visualizza il messaggio decifrato nella message box del destinatario
             const rightMessageBox = document.getElementById("rightMessageBox");
             rightMessageBox.innerHTML += `<div><strong>Other User:</strong> ${decryptedMessage}</div>`;
             rightMessageBox.innerHTML += `<div>Cifrato: ${encryptedMessage}</div>`;
         }
 
-        // Funzione per generare una coppia di chiavi RSA
         async function generateKeys() {
-            await generateRSAKeys();
+            await RSA.generateKeys();
             alert("Chiavi generate con successo!");
         }
     </script>
